@@ -137,8 +137,71 @@ plt.legend(['original', 'downsampled'], loc='best')
 plt.title('Effect of downsampling')
 mne.viz.tight_layout()
 
+############################
+# Identifying bad channels #
+############################
+
+#Power spectral density
+picks_a = []
+picks_b = []
+channels = epochs_231_resampled.info.ch_names
+
+for i in range(len(channels)):
+    if channels[i].startswith('1-A') or channels[i].startswith('1-B'):
+        picks_a.append(channels[i])
+
+print(picks_a)
+
+for i in range(len(channels)):
+    if channels[i].startswith('2-A') or channels[i].startswith('2-B'):
+        picks_b.append(channels[i])
+
+print(picks_b)
+
+## Person A ##
+# Three conditions for angry faces 
+epochs_231_resampled['Angry1','Angry2'].plot_psd(picks = picks_a, color = 'red')
+plt.legend()
+
+epochs_224a_resampled['Angry1','Angry2'].plot_psd(picks = picks_a)
+epochs_225a_resampled['Angry1','Angry2'].plot_psd(picks = picks_a)
+
+# Three conditions for happy faces 
+epochs_231_resampled['Happy1','Happy2'].plot_psd(picks = picks_a)
+epochs_224a_resampled['Happy1','Happy2'].plot_psd(picks = picks_a)
+epochs_225a_resampled['Happy1','Happy2'].plot_psd(picks = picks_a)
+
+# Three conditions for neutral faces
+epochs_231_resampled['Neutral1','Neutral2'].plot_psd(picks = picks_a)
+epochs_224a_resampled['Neutral1','Neutral2'].plot_psd(picks = picks_a)
+epochs_225a_resampled['Neutral1','Neutral2'].plot_psd(picks = picks_a)
 
 
+print(epochs_231_resampled.info.ch_names)
+
+d_231 = epochs_231_resampled['Angry1','Angry2'].getdata()
+
+
+
+#Plotting one condition
+epochs_231_resampled['Angry1','Angry2'].plot(n_epochs = 10)
+
+#Brug mne .getdata til at finde channel statistics
+
+from autoreject import Ransac
+from autoreject.utils import interpolate_bads
+
+print(epochs_231_resampled.info['chs'])
+
+print(epochs_231_resampled.info)
+
+f_rawa.info['bads'] = []
+f_rawa.info['projs'] = list()
+picks = mne.pick_types(epochs_231_resampled.info, eeg=True,
+                       stim=False, eog=False,
+                       include=[], exclude=[])
+ransac = Ransac(verbose='progressbar', picks=picks_a, n_jobs=1)
+epochs_clean = ransac.fit_transform(epochs_231_resampled)
 
 
 
