@@ -8,6 +8,7 @@ Created on Sun Sep 13 14:26:15 2020
 import os
 import mne
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
 path="C:\\Users\\kathr\\OneDrive\\Documents\\EEG Specialkursus"
 os.chdir(path)
@@ -48,6 +49,25 @@ print(rawa.info.ch_names)
 # Epoching the data #
 #####################
 
+## Dividing channels ##
+picks_a = []
+picks_b = []
+channels = rawa.info.ch_names
+
+for i in range(len(channels)):
+    if channels[i].startswith('1-A') or channels[i].startswith('1-B'):
+        picks_a.append(channels[i])
+
+print(picks_a)
+
+for i in range(len(channels)):
+    if channels[i].startswith('2-A') or channels[i].startswith('2-B'):
+        picks_b.append(channels[i])
+
+print(picks_b)
+
+## Finding unique events
+
 eventsa = mne.find_events(f_rawa, stim_channel = 'Status')
 eventsb = mne.find_events(f_rawb, stim_channel = 'Status')
 print(mne.find_events(f_rawa))
@@ -68,7 +88,7 @@ events_225_b = eventsb[1302:1901,:]
 event_dict = {'Angry1': 40, 'Angry2': 41, 'Happy1': 50,'Happy2': 51, 'Neutral1': 60, 'Neutral2':61 }
 
 epochs_231 = mne.Epochs(f_rawa, events_231, event_id = event_dict, tmin=-0.1, tmax=1,
-                    baseline=(None, 0), preload=True, detrend = 0)
+                    baseline=(None, 0), picks = picks_a, preload=True, detrend = 0)
 
 epochs_231.plot(n_epochs=10)
 
@@ -137,31 +157,16 @@ plt.legend(['original', 'downsampled'], loc='best')
 plt.title('Effect of downsampling')
 mne.viz.tight_layout()
 
+
 ############################
 # Identifying bad channels #
 ############################
 
 #Power spectral density
-picks_a = []
-picks_b = []
-channels = epochs_231_resampled.info.ch_names
-
-for i in range(len(channels)):
-    if channels[i].startswith('1-A') or channels[i].startswith('1-B'):
-        picks_a.append(channels[i])
-
-print(picks_a)
-
-for i in range(len(channels)):
-    if channels[i].startswith('2-A') or channels[i].startswith('2-B'):
-        picks_b.append(channels[i])
-
-print(picks_b)
 
 ## Person A ##
 # Three conditions for angry faces 
 epochs_231_resampled['Angry1','Angry2'].plot_psd(picks = picks_a, color = 'red')
-plt.legend()
 
 epochs_224a_resampled['Angry1','Angry2'].plot_psd(picks = picks_a)
 epochs_225a_resampled['Angry1','Angry2'].plot_psd(picks = picks_a)
@@ -179,7 +184,19 @@ epochs_225a_resampled['Neutral1','Neutral2'].plot_psd(picks = picks_a)
 
 print(epochs_231_resampled.info.ch_names)
 
-d_231 = epochs_231_resampled['Angry1','Angry2'].getdata()
+### Set montage 
+# Note to self: jeg har kun sat pick_a på epochs fra 231
+
+epochs_231_resampled.set_montage('biosemi64')
+
+
+
+# Channel Statistics
+
+df_231 = epochs_231_resampled['Angry1','Angry2'].to_data_frame(picks = picks_a)
+
+ch_stat = df_231.describe()
+
 
 
 
