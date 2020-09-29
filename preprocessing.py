@@ -52,6 +52,8 @@ print(rawa.info.ch_names)
 ## Dividing channels ##
 picks_a = []
 picks_b = []
+picks_a_eog = []
+picks_b_eog = []
 channels = rawa.info.ch_names
 
 for i in range(len(channels)):
@@ -65,6 +67,22 @@ for i in range(len(channels)):
         picks_b.append(channels[i])
 
 print(picks_b)
+
+# List of channels with eog channels
+for i in range(len(channels)):
+    if channels[i].startswith('1-A') or channels[i].startswith('1-B') or channels[i].startswith('1-E'):
+        picks_a_eog.append(channels[i])
+
+print(picks_a_eog)
+
+for i in range(len(channels)):
+    if channels[i].startswith('2-A') or channels[i].startswith('2-B') or channels[i].startswith('2-E'):
+        picks_b_eog.append(channels[i])
+
+print(picks_b_eog)
+
+
+
 
 ## Finding unique events
 
@@ -184,42 +202,64 @@ epochs_225a_resampled['Neutral1','Neutral2'].plot_psd(picks = picks_a)
 
 print(epochs_231_resampled.info.ch_names)
 
-### Set montage 
+# Plotting one channel at a time
+for i in range(len(picks_a)):
+    print('plotting channel:'+ epochs_231_resampled.info.ch_names[i] )
+    epochs_231_resampled['Angry1','Angry2'].plot_psd(picks = picks_a[i])
+
+print(epochs_231_resampled.info.ch_names[20])
+print(epochs_231_resampled.info.ch_names[25])
+
+# Channel 1-A21 and 1-A26 seems to be the most noisy channels
+epochs_231_resampled['Angry1','Angry2'].plot_psd(picks = '1-A21')
+epochs_231_resampled['Angry1','Angry2'].plot_psd(picks = '1-A26')
+
+epochs_231_resampled['Angry1','Angry2'].plot(picks = '1-A21')
+epochs_231_resampled['Angry1','Angry2'].plot(picks = picks_a[20:30],n_epochs = 10)
+
+
+#################################
+# Setting correct channel names # 
+#################################
+
+montage = mne.channels.make_standard_montage("biosemi64")
+#montage.plot()
+new_ch_names = montage.ch_names
+
+for i in range(len(new_ch_names)):
+    
+    epochs_231_resampled.rename_channels(mapping = {picks_a[i]:new_ch_names[i]})
+
+print(epochs_231_resampled.info.ch_names)
+
+epochs_231_resampled['Angry1','Angry2'].plot(picks = new_ch_names[20:30],n_epochs = 10)
+
+
 # Note to self: jeg har kun sat pick_a på epochs fra 231
 
-epochs_231_resampled.set_montage('biosemi64')
+########################
+# Marking bad channels #
+########################
 
+epochs_231_resampled.info['bads'].append('PO3')
 
+# Should I interpolate?
 
-# Channel Statistics
+######################
+# Channel Statistics #
+######################
 
 df_231 = epochs_231_resampled['Angry1','Angry2'].to_data_frame(picks = picks_a)
 
 ch_stat = df_231.describe()
 
+#########################################
+# Artifact rejection using EOG Channels #
+#########################################
 
 
-
-#Plotting one condition
-epochs_231_resampled['Angry1','Angry2'].plot(n_epochs = 10)
-
-#Brug mne .getdata til at finde channel statistics
-
-from autoreject import Ransac
-from autoreject.utils import interpolate_bads
-
-print(epochs_231_resampled.info['chs'])
-
-print(epochs_231_resampled.info)
-
-f_rawa.info['bads'] = []
-f_rawa.info['projs'] = list()
-picks = mne.pick_types(epochs_231_resampled.info, eeg=True,
-                       stim=False, eog=False,
-                       include=[], exclude=[])
-ransac = Ransac(verbose='progressbar', picks=picks_a, n_jobs=1)
-epochs_clean = ransac.fit_transform(epochs_231_resampled)
-
+eog_events = mne.preprocessing.find_eog_events(f_rawa)
+print(f_rawa.info.ch_names)
 
 
 
