@@ -13,41 +13,40 @@ from matplotlib import pyplot as plt
 path="C:\\Users\\kathr\\OneDrive\\Documents\\EEG Specialkursus"
 os.chdir(path)
 
-####################
-# Loading the data #
-####################
+######################
+#%% Loading the data #
+######################
 
 mne.set_log_level("WARNING")
 raw1 = mne.io.read_raw_bdf("sj0013a_unshared.bdf", preload=True)
 raw2 = mne.io.read_raw_bdf("sj0013ab_shared.bdf", preload=True)
 raw3 = mne.io.read_raw_bdf("sj0013b_unshared.bdf", preload=True)
 
-raw1.plot(n_channels=6, scalings={"eeg": 600e-7}, start=100, block = True)
+#raw1.plot(n_channels=6, scalings={"eeg": 600e-7}, start=100, block = True)
 
 rawa = mne.concatenate_raws([raw1,raw2])
 rawb = mne.concatenate_raws([raw2,raw3])
 print(rawa.info)
 
-######################
-# Filtering the data #
-######################
+########################
+#%% Filtering the data #
+########################
 
 #Applying high pass filter at 0.1 Hz and low pass filter at 40 Hz 
 
 f_rawa = rawa.filter(l_freq=0.1, h_freq=40, picks="eeg") 
 f_rawb = rawb.filter(l_freq=0.1, h_freq=40, picks="eeg")
-
-f_rawa.plot(n_channels=32, scalings={"eeg": 600e-8}, start=100, block = True)
-f_rawa.plot(n_channels=32, scalings={"eeg": 600e-8}, start=100, block = True)
+#f_rawa.plot(n_channels=32, scalings={"eeg": 600e-8}, start=100, block = True)
+#f_rawa.plot(n_channels=32, scalings={"eeg": 600e-8}, start=100, block = True)
 
 mne.viz.plot_raw(f_rawa, n_channels = 100)
 
 
 print(rawa.info.ch_names)
 
-#####################
-# Epoching the data #
-#####################
+#######################
+#%% Epoching the data #
+#######################
 
 ## Dividing channels ##
 picks_a = []
@@ -145,9 +144,9 @@ epochs_225_b = mne.Epochs(f_rawa, events_225_b, event_id = event_dict, tmin=-0.1
 
 epochs_225_b.plot(n_epochs=10)
 
-#########################
-# Downsampling the data #
-#########################
+###########################
+#%% Downsampling the data #
+###########################
 
 #Downsampling person A
 epochs_231_resampled = epochs_231.copy().resample(256, npad = 'auto')
@@ -176,9 +175,9 @@ plt.title('Effect of downsampling')
 mne.viz.tight_layout()
 
 
-############################
-# Identifying bad channels #
-############################
+##############################
+#%% Identifying bad channels #
+##############################
 
 #Power spectral density
 
@@ -218,9 +217,9 @@ epochs_231_resampled['Angry1','Angry2'].plot(picks = '1-A21')
 epochs_231_resampled['Angry1','Angry2'].plot(picks = picks_a[20:30],n_epochs = 10)
 
 
-#################################
-# Setting correct channel names # 
-#################################
+###################################
+#%% Setting correct channel names # 
+###################################
 
 montage = mne.channels.make_standard_montage("biosemi64")
 #montage.plot()
@@ -237,28 +236,49 @@ epochs_231_resampled['Angry1','Angry2'].plot(picks = new_ch_names[20:30],n_epoch
 
 # Note to self: jeg har kun sat pick_a på epochs fra 231
 
-########################
-# Marking bad channels #
-########################
+##########################
+#%% Marking bad channels #
+##########################
 
 epochs_231_resampled.info['bads'].append('PO3')
 
 # Should I interpolate?
 
-######################
-# Channel Statistics #
-######################
+########################
+#%% Channel Statistics #
+########################
 
 df_231 = epochs_231_resampled['Angry1','Angry2'].to_data_frame(picks = picks_a)
 
 ch_stat = df_231.describe()
 
-#########################################
-# Artifact rejection using EOG Channels #
-#########################################
+###########################################
+#%% Artifact rejection using EOG Channels #
+###########################################
+
+f_rawa.rename_channels(mapping = {'1-EXG1':'1-EOG'})
+f_rawa.rename_channels(mapping = {'1-EXG2':'2-EOG'})
+f_rawa.rename_channels(mapping = {'1-EXG3':'3-EOG'})
+
+eog_events = mne.preprocessing.find_eog_events(f_rawa, ch_name = '1-EXG1')
+eog_events = mne.preprocessing.find_eog_events(f_rawa, ch_name = '1-EXG2')
+eog_events = mne.preprocessing.find_eog_events(f_rawa, ch_name = '1-EXG3')
+
+eog_epochs = mne.preprocessing.create_eog_epochs(f_rawa, ch_name='1-EXG1', event_id=998)
+eog_epochs = mne.preprocessing.create_eog_epochs(f_rawa, ch_name='1-EXG2', event_id=998)
+eog_epochs = mne.preprocessing.create_eog_epochs(f_rawa, ch_name='1-EXG3', event_id=998)
+
+print(f_rawa.info.ch_names)
+
+eog = f_rawa.pick_types(eog=True)
+print(eog)
 
 
-eog_events = mne.preprocessing.find_eog_events(f_rawa)
+print(mne.find_events(f_rawa))
+
+print(eog_epochs)
+
+print(eog_events)
 print(f_rawa.info.ch_names)
 
 
