@@ -198,6 +198,7 @@ epochs_225_b.plot(n_epochs=10)
 ###########################
 
 #Downsampling person A
+epochs_a_resampled = epochs_a.copy().resample(256, npad = 'auto')
 epochs_231_resampled = epochs_231.copy().resample(256, npad = 'auto')
 epochs_224a_resampled = epochs_224_a.copy().resample(256, npad = 'auto')
 epochs_225a_resampled = epochs_225_a.copy().resample(256, npad = 'auto')
@@ -224,13 +225,14 @@ plt.title('Effect of downsampling')
 mne.viz.tight_layout()
 
 #Saving resampled epochs
-epochs_231_resampled.save('epochs_231_resampled.fif', overwrite = True)
-epochs_224a_resampled.save('epochs_224a_resampled.fif', overwrite = True)
-epochs_225a_resampled.save('epochs_225a_resampled.fif', overwrite = True)
+epochs_a_resampled.save('epochs_a_resampled-epo.fif', overwrite = True)
+epochs_231_resampled.save('epochs_231_resampled-epo.fif', overwrite = True)
+epochs_224a_resampled.save('epochs_224a_resampled-epo.fif', overwrite = True)
+epochs_225a_resampled.save('epochs_225a_resampled-epo.fif', overwrite = True)
 
-epochs_233_resampled.save('epochs_233_resampled.fif', overwrite = True)
-epochs_224a_resampled.save('epochs_224a_resampled.fif', overwrite = True)
-epochs_225b_resampled.save('epochs_225b_resampled.fif', overwrite = True)
+epochs_233_resampled.save('epochs_233_resampled-epo.fif', overwrite = True)
+epochs_224a_resampled.save('epochs_224a_resampled-epo.fif', overwrite = True)
+epochs_225b_resampled.save('epochs_225b_resampled-epo.fif', overwrite = True)
 
 ##############################
 # Reading downsampled epochs #
@@ -270,10 +272,12 @@ epochs_225a_resampled['Neutral1','Neutral2'].plot_psd(picks = picks_a)
 
 print(epochs_231_resampled.info.ch_names)
 
+
 # Plotting one channel at a time
-for i in range(len(picks_a)):
-    print('plotting channel:'+ epochs_231_resampled.info.ch_names[i] )
-    epochs_231_resampled['Angry1','Angry2'].plot_psd(picks = picks_a[i])
+# not working but have worked previously...
+#for i in range(len(picks_a)):
+#    print('plotting channel:' + epochs_231_resampled.info.ch_names[i])
+#    epochs_231_resampled['Angry1','Angry2'].plot_psd(picks = picks_a[i])
 
 print(epochs_231_resampled.info.ch_names[20])
 print(epochs_231_resampled.info.ch_names[25])
@@ -296,9 +300,27 @@ new_ch_names = montage.ch_names
 
 for i in range(len(new_ch_names)):
     
+    epochs_a_resampled.rename_channels(mapping = {picks_a[i]:new_ch_names[i]})
+
+print(epochs_a_resampled.info.ch_names)
+
+for i in range(len(new_ch_names)):
+    
     epochs_231_resampled.rename_channels(mapping = {picks_a[i]:new_ch_names[i]})
 
 print(epochs_231_resampled.info.ch_names)
+
+for i in range(len(new_ch_names)):
+    
+    epochs_224a_resampled.rename_channels(mapping = {picks_a[i]:new_ch_names[i]})
+
+print(epochs_224a_resampled.info.ch_names)
+
+for i in range(len(new_ch_names)):
+    
+    epochs_225a_resampled.rename_channels(mapping = {picks_a[i]:new_ch_names[i]})
+
+print(epochs_225a_resampled.info.ch_names)
 
 epochs_231_resampled['Angry1','Angry2'].plot(picks = new_ch_names[20:30],n_epochs = 10)
 
@@ -319,8 +341,11 @@ ch_stat = df_231.describe()
 
 #epochs_231_resampled.info['bad'] = ['PO3']
 
+epochs_a_resampled.info['bads'].append('PO3')
 epochs_231_resampled.info['bads'].append('PO3')
-epochs_231_resampled.interpolate_bads()
+epochs_224a_resampled.info['bads'].append('PO3')
+epochs_225a_resampled.info['bads'].append('PO3')
+#epochs_231_resampled.interpolate_bads()
 print(epochs_231_resampled.info.ch_names)
 
 print(epochs_231_resampled.info['bads'])
@@ -330,9 +355,12 @@ print(epochs_231_resampled.info['bads'])
 #####################
 
 
-print(epochs_224a_resampled.info['dig'])
+#print(epochs_224a_resampled.info['dig'])
 
+epochs_a_resampled.set_eeg_reference('average')
 epochs_231_resampled.set_eeg_reference('average')
+epochs_224a_resampled.set_eeg_reference('average')
+epochs_225a_resampled.set_eeg_reference('average')
 
 #Creating average plot
 
@@ -340,9 +368,11 @@ print(new_ch_names)
 
 epochs_231_resampled.set_channel_types({'Fp1':'eeg'})
 evoked_231_Angry = epochs_231_resampled['Angry1','Angry2'].average(picks = new_ch_names)
+evoked_231_Happy = epochs_231_resampled['Happy1','Happy2'].average(picks = new_ch_names)
+evoked_231_Neutral = epochs_231_resampled['Neutral1','Neutral2'].average(picks = new_ch_names)
 evoked_231_Angry.plot()
-
-
+evoked_231_Happy.plot()
+evoked_231_Neutral.plot()
 
 # Testing things
 
