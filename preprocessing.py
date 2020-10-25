@@ -10,7 +10,8 @@ import mne
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-path="C:\\Users\\kathr\\OneDrive\\Documents\\EEG Specialkursus"
+#path="C:\\Users\\kathr\\OneDrive\\Documents\\EEG Specialkursus"
+path="C:\\Users\\kathr\\OneDrive\\Documents\\GitHub\\EEG---Special-course"
 os.chdir(path)
 
 ######################
@@ -231,7 +232,7 @@ epochs_224a_resampled.save('epochs_224a_resampled-epo.fif', overwrite = True)
 epochs_225a_resampled.save('epochs_225a_resampled-epo.fif', overwrite = True)
 
 epochs_233_resampled.save('epochs_233_resampled-epo.fif', overwrite = True)
-epochs_224a_resampled.save('epochs_224a_resampled-epo.fif', overwrite = True)
+epochs_224a_resampled.save('epochs_224b_resampled-epo.fif', overwrite = True)
 epochs_225b_resampled.save('epochs_225b_resampled-epo.fif', overwrite = True)
 
 ##############################
