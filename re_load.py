@@ -22,6 +22,7 @@ epochs_a_resampled = mne.read_epochs('epochs_a_resampled-epo.fif')
 epochs_231_resampled = mne.read_epochs('epochs_231_resampled-epo.fif')
 epochs_224a_resampled = mne.read_epochs('epochs_224a_resampled-epo.fif')
 epochs_225a_resampled = mne.read_epochs('epochs_225a_resampled-epo.fif')
+epochs_b_resampled = mne.read_epochs('epochs_b_resampled-epo.fif')
 epochs_233_resampled = mne.read_epochs('epochs_233_resampled-epo.fif')
 epochs_224b_resampled = mne.read_epochs('epochs_224b_resampled-epo.fif')
 epochs_225b_resampled = mne.read_epochs('epochs_225b_resampled-epo.fif')
@@ -34,7 +35,9 @@ picks_a = []
 picks_b = []
 picks_a_eog = []
 picks_b_eog = []
-channels = epochs_231_resampled.info.ch_names
+channels = epochs_224b_resampled.info.ch_names
+
+
 
 for i in range(len(channels)):
     if channels[i].startswith('1-A') or channels[i].startswith('1-B'):
@@ -68,6 +71,9 @@ print(picks_b_eog)
 montage = mne.channels.make_standard_montage("biosemi64")
 #montage.plot()
 new_ch_names = montage.ch_names
+print(new_ch_names)
+print(picks_b)
+print(picks_a)
 
 for i in range(len(new_ch_names)):
     
@@ -93,6 +99,30 @@ for i in range(len(new_ch_names)):
 
 print(epochs_225a_resampled.info.ch_names)
 
+for i in range(len(new_ch_names)):
+    
+    epochs_b_resampled.rename_channels(mapping = {picks_b[i]:new_ch_names[i]})
+
+print(epochs_b_resampled.info.ch_names)
+
+for i in range(len(new_ch_names)):
+    
+    epochs_233_resampled.rename_channels(mapping = {picks_b[i]:new_ch_names[i]})
+
+print(epochs_233_resampled.info.ch_names)
+
+for i in range(len(new_ch_names)):
+    
+    epochs_224b_resampled.rename_channels(mapping = {picks_b[i]:new_ch_names[i]})
+
+print(epochs_224b_resampled.info.ch_names)
+
+for i in range(len(new_ch_names)):
+    
+    epochs_225b_resampled.rename_channels(mapping = {picks_b[i]:new_ch_names[i]})
+
+print(epochs_225b_resampled.info.ch_names)
+
 
 epochs_231_resampled['Angry1','Angry2'].plot(picks = new_ch_names[20:30],n_epochs = 10)
 
@@ -101,7 +131,14 @@ epochs_231_resampled['Angry1','Angry2'].plot(picks = new_ch_names[20:30],n_epoch
 #%% Removing bad channels ##
 ############################
 
+epochs_a_resampled.info['bads'].append('PO3')
 epochs_231_resampled.info['bads'].append('PO3')
+epochs_224a_resampled.info['bads'].append('PO3')
+epochs_225a_resampled.info['bads'].append('PO3')
+epochs_b_resampled.info['bads'].append('PO3')
+epochs_233_resampled.info['bads'].append('PO3')
+epochs_224b_resampled.info['bads'].append('PO3')
+epochs_225b_resampled.info['bads'].append('PO3')
 #epochs_231_resampled.interpolate_bads()
 
 #####################
@@ -112,6 +149,10 @@ epochs_a_resampled.set_eeg_reference('average')
 epochs_231_resampled.set_eeg_reference('average')
 epochs_224a_resampled.set_eeg_reference('average')
 epochs_225a_resampled.set_eeg_reference('average')
+epochs_b_resampled.set_eeg_reference('average')
+epochs_233_resampled.set_eeg_reference('average')
+epochs_224b_resampled.set_eeg_reference('average')
+epochs_225b_resampled.set_eeg_reference('average')
 
 
 

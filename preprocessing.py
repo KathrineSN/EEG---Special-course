@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 #path="C:\\Users\\kathr\\OneDrive\\Documents\\EEG Specialkursus"
-path="C:\\Users\\kathr\\OneDrive\\Documents\\GitHub\\EEG---Special-course"
+path="C:\\Users\\kathr\\OneDrive\\Documents\\EEG Specialkursus"
 os.chdir(path)
 
 ######################
@@ -19,9 +19,9 @@ os.chdir(path)
 ######################
 
 mne.set_log_level("WARNING")
-raw1 = mne.io.read_raw_bdf("sj0013a_unshared.bdf", preload=True)
-raw2 = mne.io.read_raw_bdf("sj0013ab_shared.bdf", preload=True)
-raw3 = mne.io.read_raw_bdf("sj0013b_unshared.bdf", preload=True)
+raw1 = mne.io.read_raw_bdf("sj0016a_unshared.bdf", preload=True)
+raw2 = mne.io.read_raw_bdf("sj0016ab_shared.bdf", preload=True)
+raw3 = mne.io.read_raw_bdf("sj0016b_unshared.bdf", preload=True)
 
 #raw1.plot(n_channels=6, scalings={"eeg": 600e-7}, start=100, block = True)
 
@@ -107,6 +107,8 @@ events_225_b = eventsb[1302:1901,:]
 
 f_rawa.set_channel_types({'1-A1':'ecg'})
 f_rawa.set_channel_types({'1-EXG1':'eog'})
+f_rawa.set_channel_types({'2-A1':'ecg'})
+f_rawa.set_channel_types({'2-EXG1':'eog'})
 f_rawa.get_channel_types()
 
 reject_criteria = dict(eeg = 80e-6,
@@ -117,16 +119,21 @@ reject_criteria = dict(eeg = 80e-6,
 event_dict = {'Angry1': 40, 'Angry2': 41, 'Happy1': 50,'Happy2': 51, 'Neutral1': 60, 'Neutral2':61 }
 
 # Epochs for subject a all conditions
-epochs_a = mne.Epochs(f_rawa, eventsa, event_id = event_dict, tmin=-0.1, tmax=1,
+epochs_a = mne.Epochs(f_rawa, eventsa, event_id = event_dict, tmin=-0.5, tmax=1,
                     baseline=(None, 0), picks = picks_a_eog, preload=True, detrend = 0, reject = reject_criteria)
 
 epochs_a.save('epochs_a-epo.fif', overwrite = True)
+
+epochs_b = mne.Epochs(f_rawa, eventsb, event_id = event_dict, tmin=-0.5, tmax=1,
+                    baseline=(None, 0), picks = picks_b_eog, preload=True, detrend = 0, reject = reject_criteria)
+
+epochs_b.save('epochs_b-epo.fif', overwrite = True)
 
 epochs_a.plot_drop_log()
 print(epochs_a.drop_log)
 
 # Epochs for separate conditions for subject a
-epochs_231 = mne.Epochs(f_rawa, events_231, event_id = event_dict, tmin=-0.1, tmax=1,
+epochs_231 = mne.Epochs(f_rawa, events_231, event_id = event_dict, tmin=-0.5, tmax=1,
                     baseline=(None, 0), picks = picks_a_eog, preload=True, detrend = 0, reject = reject_criteria)
 
 epochs_231.plot_drop_log()
@@ -138,8 +145,8 @@ epochs_231.plot(n_epochs=10)
 
 #Epochs for AB shared with feedback
 
-epochs_224_a = mne.Epochs(f_rawa, events_224_a, event_id = event_dict, tmin=-0.1, tmax=1,
-                    baseline=(None, 0), preload=True, detrend = 0, reject = reject_criteria)
+epochs_224_a = mne.Epochs(f_rawa, events_224_a, event_id = event_dict, tmin=-0.5, tmax=1,
+                    baseline=(None, 0), picks = picks_a_eog, preload=True, detrend = 0, reject = reject_criteria)
 
 epochs_224_a.save('epochs_224_a-epo.fif', overwrite = True)
 
@@ -147,8 +154,8 @@ epochs_224_a.plot(n_epochs=10)
 
 #Epochs for AB shared without feedback
 
-epochs_225_a = mne.Epochs(f_rawa, events_225_a, event_id = event_dict, tmin=-0.1, tmax=1,
-                    baseline=(None, 0), preload=True, detrend = 0, reject = reject_criteria)
+epochs_225_a = mne.Epochs(f_rawa, events_225_a, event_id = event_dict, tmin=-0.5, tmax=1,
+                    baseline=(None, 0), picks = picks_a_eog, preload=True, detrend = 0, reject = reject_criteria)
 
 epochs_225_a.save('epochs_225_a-epo.fif', overwrite = True)
 
@@ -156,8 +163,8 @@ epochs_225_a.plot(n_epochs=10)
 
 ## Epochs for person B
 
-epochs_233 = mne.Epochs(f_rawa, events_233, event_id = event_dict, tmin=-0.1, tmax=1,
-                    baseline=(None, 0), preload=True, detrend = 0, reject = reject_criteria)
+epochs_233 = mne.Epochs(f_rawa, events_233, event_id = event_dict, tmin=-0.5, tmax=1,
+                    baseline=(None, 0), picks = picks_b_eog, preload=True, detrend = 0, reject = reject_criteria)
 
 epochs_233.save('epochs_233-epo.fif', overwrite = True)
 
@@ -165,8 +172,8 @@ epochs_233.plot(n_epochs=10)
 
 #Epochs for AB shared with feedback
 
-epochs_224_b = mne.Epochs(f_rawa, events_224_b, event_id = event_dict, tmin=-0.1, tmax=1,
-                    baseline=(None, 0), preload=True, detrend = 0, reject = reject_criteria)
+epochs_224_b = mne.Epochs(f_rawa, events_224_b, event_id = event_dict, tmin=-0.5, tmax=1,
+                    baseline=(None, 0), picks = picks_b_eog, preload=True, detrend = 0, reject = reject_criteria)
 
 epochs_224_b.save('epochs_224_b-epo.fif', overwrite = True)
 
@@ -174,8 +181,8 @@ epochs_224_b.plot(n_epochs=10)
 
 #Epochs for AB shared without feedback
 
-epochs_225_b = mne.Epochs(f_rawa, events_225_b, event_id = event_dict, tmin=-0.1, tmax=1,
-                    baseline=(None, 0), preload=True, detrend = 0, reject = reject_criteria)
+epochs_225_b = mne.Epochs(f_rawa, events_225_b, event_id = event_dict, tmin=-0.5, tmax=1,
+                    baseline=(None, 0), picks = picks_b_eog, preload=True, detrend = 0, reject = reject_criteria)
 epochs_225_b.save('epochs_225_b-epo.fif', overwrite = True)
 
 epochs_225_b.plot(n_epochs=10)
@@ -205,6 +212,7 @@ epochs_224a_resampled = epochs_224_a.copy().resample(256, npad = 'auto')
 epochs_225a_resampled = epochs_225_a.copy().resample(256, npad = 'auto')
 
 #Downsampling person B
+epochs_b_resampled = epochs_b.copy().resample(256, npad = 'auto')
 epochs_233_resampled = epochs_233.copy().resample(256, npad = 'auto')
 epochs_224b_resampled = epochs_224_b.copy().resample(256, npad = 'auto')
 epochs_225b_resampled = epochs_225_b.copy().resample(256, npad = 'auto')
@@ -231,6 +239,7 @@ epochs_231_resampled.save('epochs_231_resampled-epo.fif', overwrite = True)
 epochs_224a_resampled.save('epochs_224a_resampled-epo.fif', overwrite = True)
 epochs_225a_resampled.save('epochs_225a_resampled-epo.fif', overwrite = True)
 
+epochs_b_resampled.save('epochs_b_resampled-epo.fif', overwrite = True)
 epochs_233_resampled.save('epochs_233_resampled-epo.fif', overwrite = True)
 epochs_224a_resampled.save('epochs_224b_resampled-epo.fif', overwrite = True)
 epochs_225b_resampled.save('epochs_225b_resampled-epo.fif', overwrite = True)
@@ -263,12 +272,14 @@ epochs_225a_resampled['Angry1','Angry2'].plot_psd(picks = picks_a)
 # Three conditions for happy faces 
 epochs_231_resampled['Happy1','Happy2'].plot_psd(picks = picks_a)
 epochs_224a_resampled['Happy1','Happy2'].plot_psd(picks = picks_a)
-epochs_225a_resampled['Happy1','Happy2'].plot_psd(picks = picks_a)
+epochs_225a_resampled['Happy1','Happy2'].plot_psd()
 
 # Three conditions for neutral faces
 epochs_231_resampled['Neutral1','Neutral2'].plot_psd(picks = picks_a)
 epochs_224a_resampled['Neutral1','Neutral2'].plot_psd(picks = picks_a)
 epochs_225a_resampled['Neutral1','Neutral2'].plot_psd(picks = picks_a)
+
+epochs_225b_resampled['Angry1','Angry2'].plot_psd()
 
 
 print(epochs_231_resampled.info.ch_names)
@@ -300,7 +311,8 @@ montage = mne.channels.make_standard_montage("biosemi64")
 new_ch_names = montage.ch_names
 
 for i in range(len(new_ch_names)):
-    
+    print(picks_a[i])
+    print(new_ch_names[i])
     epochs_a_resampled.rename_channels(mapping = {picks_a[i]:new_ch_names[i]})
 
 print(epochs_a_resampled.info.ch_names)
@@ -325,7 +337,29 @@ print(epochs_225a_resampled.info.ch_names)
 
 epochs_231_resampled['Angry1','Angry2'].plot(picks = new_ch_names[20:30],n_epochs = 10)
 
+for i in range(len(new_ch_names)):
+    
+    epochs_b_resampled.rename_channels(mapping = {picks_b[i]:new_ch_names[i]})
 
+print(epochs_b_resampled.info.ch_names)
+
+for i in range(len(new_ch_names)):
+    
+    epochs_233_resampled.rename_channels(mapping = {picks_b[i]:new_ch_names[i]})
+
+print(epochs_233_resampled.info.ch_names)
+
+for i in range(len(new_ch_names)):
+    
+    epochs_224b_resampled.rename_channels(mapping = {picks_b[i]:new_ch_names[i]})
+
+print(epochs_224b_resampled.info.ch_names)
+
+for i in range(len(new_ch_names)):
+    
+    epochs_225b_resampled.rename_channels(mapping = {picks_b[i]:new_ch_names[i]})
+
+print(epochs_225b_resampled.info.ch_names)
 # Note to self: jeg har kun sat pick_a på epochs fra 231
 
 ########################
@@ -333,8 +367,12 @@ epochs_231_resampled['Angry1','Angry2'].plot(picks = new_ch_names[20:30],n_epoch
 ########################
 
 df_231 = epochs_231_resampled['Angry1','Angry2'].to_data_frame(picks = new_ch_names)
+df_233 = epochs_233_resampled['Angry1','Angry2'].to_data_frame(picks = new_ch_names)
 
-ch_stat = df_231.describe()
+ch_stat_231 = df_231.describe()
+ch_stat_233 = df_233.describe()
+
+epochs_233_resampled.plot()
 
 ###########################################
 #%% Dropping bad channels & interpolating #

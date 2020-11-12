@@ -1,0 +1,139 @@
+---
+title: "R Notebook"
+output: html_notebook
+
+Loading the data
+---
+```{r}
+N170.data <- read.csv("N170data.csv", header = TRUE)
+EPN.data <- read.csv("EPNdata.csv", header = TRUE)
+EarlyLPP.data <- read.csv("EarlyLPPdata.csv", header = TRUE)
+LateLPP.data <- read.csv("LateLPPdata.csv", header = TRUE)
+#summary(N170.data)
+#summary(EPN.data)
+#summary(EarlyLPP.data)
+#summary(LateLPP.data)
+```
+
+Boxplots of Social Conditions
+```{r}
+par(mfrow=c(2,2))
+boxplot(N170.data$Avg..amplitude ~ N170.data$Social.condition, main = 'Social Conditions for N170', ylab = "Average ampltitude", xlab = "Condition", col = "lightblue", border = "lightblue4")
+
+boxplot(EPN.data$Avg..amplitude ~ EPN.data$Social.condition, main = 'Social Conditions for EPN', ylab = "Average ampltitude", xlab = "Condition",  col = "lightblue", border = "lightblue4")
+
+boxplot(EarlyLPP.data$Avg..amplitude ~ EarlyLPP.data$Social.condition, main = 'Social Conditions for Early LPP', ylab = "Average ampltitude", xlab = "Condition",  col = "lightblue", border = "lightblue4")
+
+boxplot(LateLPP.data$Avg..amplitude ~ LateLPP.data$Social.condition, main = 'Social Conditions for Late LPP', ylab = "Average ampltitude", xlab = "Condition",  col = "lightblue", border = "lightblue4")
+
+```
+
+Boxplots of Emotional Conditions
+```{r}
+par(mfrow=c(2,2))
+boxplot(N170.data$Avg..amplitude ~ N170.data$Emotional.condition, main = 'Emotional Conditions for N170', ylab = "Average ampltitude", xlab = "Condition", col = "navajowhite", border = "navajowhite4")
+
+boxplot(EPN.data$Avg..amplitude ~ EPN.data$Emotional.condition, main = 'Emotional Conditions for EPN', ylab = "Average ampltitude", xlab = "Condition", col = "navajowhite", border = "navajowhite4")
+
+boxplot(EarlyLPP.data$Avg..amplitude ~ EarlyLPP.data$Emotional.condition, main = 'Emotional Conditions for Early LPP', ylab = "Average ampltitude", xlab = "Condition", col = "navajowhite", border = "navajowhite4")
+
+boxplot(LateLPP.data$Avg..amplitude ~ LateLPP.data$Emotional.condition, main = 'Emotional Condition for Late LPP', ylab = "Average ampltitude", xlab = "Condition", col = "navajowhite", border = "navajowhite4")
+
+```
+
+QQ-plots of Social & Emotional Conditions
+```{r}
+library(car)
+qqPlot(N170.data$Avg..amplitude[N170.data$Social.condition=='231'], ylab = 'sample quantiles', main = 'N170 - Unshared')
+qqPlot(N170.data$Avg..amplitude[N170.data$Social.condition=='224'], ylab = 'sample quantiles', main = 'N170 - Shared with Feedback')
+qqPlot(N170.data$Avg..amplitude[N170.data$Social.condition=='225'], ylab = 'sample quantiles', main = 'N170 - Shared without Feedback')
+
+```
+```{r}
+qqPlot(N170.data$Avg..amplitude[N170.data$Emotional.condition=='Angry'], ylab = 'sample quantiles', main = 'N170 - Angry')
+qqPlot(N170.data$Avg..amplitude[N170.data$Emotional.condition=='Happy'], ylab = 'sample quantiles', main = 'N170 - Happy')
+qqPlot(N170.data$Avg..amplitude[N170.data$Emotional.condition=='Neutral'], ylab = 'sample quantiles', main = 'N170 - Neutral')
+
+```
+```{r}
+qqPlot(EPN.data$Avg..amplitude[EPN.data$Social.condition=='231'], ylab = 'sample quantiles', main = 'EPN - Unshared')
+qqPlot(EPN.data$Avg..amplitude[EPN.data$Social.condition=='224'], ylab = 'sample quantiles', main = 'EPN - Shared with Feedback')
+qqPlot(EPN.data$Avg..amplitude[EPN.data$Social.condition=='225'], ylab = 'sample quantiles', main = 'EPN - Shared without Feedback')
+```
+```{r}
+qqPlot(EPN.data$Avg..amplitude[EPN.data$Emotional.condition=='Angry'], ylab = 'sample quantiles', main = 'EPN - Angry')
+qqPlot(EPN.data$Avg..amplitude[EPN.data$Emotional.condition=='Happy'], ylab = 'sample quantiles', main = 'EPN - Happy')
+qqPlot(EPN.data$Avg..amplitude[EPN.data$Emotional.condition=='Neutral'], ylab = 'sample quantiles', main = 'EPN - Neutral')
+
+```
+```{r}
+qqPlot(EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition=='231'], ylab = 'sample quantiles', main = 'Early LPP - Unshared')
+qqPlot(EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition=='224'], ylab = 'sample quantiles', main = 'Early LPP - Shared with Feedback')
+qqPlot(EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition=='225'], ylab = 'sample quantiles', main = 'Early LPP - Shared without Feedback')
+```
+
+```{r}
+qqPlot(EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Emotional.condition=='Angry'], ylab = 'sample quantiles', main = 'Early LPP - Angry')
+qqPlot(EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Emotional.condition=='Happy'], ylab = 'sample quantiles', main = 'Early LPP - Happy')
+qqPlot(EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Emotional.condition=='Neutral'], ylab = 'sample quantiles', main = 'Early LPP - Neutral')
+
+```
+```{r}
+qqPlot(LateLPP.data$Avg..amplitude[LateLPP.data$Social.condition=='231'], ylab = 'sample quantiles', main = 'Late LPP - Unshared')
+qqPlot(LateLPP.data$Avg..amplitude[LateLPP.data$Social.condition=='224'], ylab = 'sample quantiles', main = 'Late LPP - Shared with Feedback')
+qqPlot(LateLPP.data$Avg..amplitude[LateLPP.data$Social.condition=='225'], ylab = 'sample quantiles', main = 'Late LPP - Shared without Feedback')
+```
+
+```{r}
+qqPlot(LateLPP.data$Avg..amplitude[LateLPP.data$Emotional.condition=='Angry'], ylab = 'sample quantiles', main = 'Late LPP - Angry')
+qqPlot(LateLPP.data$Avg..amplitude[LateLPP.data$Emotional.condition=='Happy'], ylab = 'sample quantiles', main = 'Late LPP - Happy')
+qqPlot(LateLPP.data$Avg..amplitude[LateLPP.data$Emotional.condition=='Neutral'], ylab = 'sample quantiles', main = 'Late LPP - Neutral')
+
+```
+
+```{r}
+library(ggplot2)
+head(N170.data,7)
+
+```
+```{r}
+data_summary <- function(data, varname, groupnames){
+  require(plyr)
+  summary_func <- function(x, col){
+    c(mean = mean(x[[col]], na.rm=TRUE),
+      sd = sd(x[[col]], na.rm=TRUE))
+  }
+  data_sum<-ddply(data, groupnames, .fun=summary_func,
+                  varname)
+  data_sum <- rename(data_sum, c("mean" = varname))
+ return(data_sum)
+}
+
+df2 <- data_summary(N170.data, varname="Avg..amplitude", 
+                    groupnames=c("Social.condition", "Emotional.condition"))
+# Convert dose to a factor variable
+df2$Social.condition=as.factor(df2$Social.condition)
+head(df2)
+
+# Default line plot
+p<- ggplot(df2, aes(x=Social.condition, y=Avg..amplitude, group=Emotional.condition, color=Emotional.condition)) + 
+  geom_line() +
+  geom_point()+
+  geom_errorbar(aes(ymin=Avg..amplitude-sd, ymax=Avg..amplitude+sd), width=.2,
+                 position=position_dodge(0.05))
+
+# Finished line plot
+p+labs(title="Interaction between socical and emotional conditions - N170", x="Social Condition", y = "Avg. amplitude")
+
+```
+
+
+```{r}
+
+```
+
+
+
+
+
+
