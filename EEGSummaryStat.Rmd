@@ -9,6 +9,7 @@ N170.data <- read.csv("N170data.csv", header = TRUE)
 EPN.data <- read.csv("EPNdata.csv", header = TRUE)
 EarlyLPP.data <- read.csv("EarlyLPPdata.csv", header = TRUE)
 LateLPP.data <- read.csv("LateLPPdata.csv", header = TRUE)
+head(N170.data)
 #summary(N170.data)
 #summary(EPN.data)
 #summary(EarlyLPP.data)
@@ -129,8 +130,223 @@ p+labs(title="Interaction between socical and emotional conditions - N170", x="S
 
 
 ```{r}
+interaction.plot(x.factor     = N170.data$Social.condition,
+                 trace.factor = N170.data$Emotional.condition,
+                 response     = N170.data$Avg..amplitude,
+                 fun = mean,
+                 type="b",
+                 col=c("black","red","green"),  ### Colors for levels of trace var.
+                 pch=c(19, 17, 15),             ### Symbols for levels of trace var.
+                 fixed=TRUE,                    ### Order by factor order in data
+                 leg.bty = "o",
+                 xlab = 'Social condition',
+                 ylab = 'Average amplitude',
+                 trace.label = 'Emotional condition')
+```
+
+```{r}
+data_summary <- function(data, varname, groupnames){
+  require(plyr)
+  summary_func <- function(x, col){
+    c(mean = mean(x[[col]], na.rm=TRUE),
+      sd = sd(x[[col]], na.rm=TRUE))
+  }
+  data_sum<-ddply(data, groupnames, .fun=summary_func,
+                  varname)
+  data_sum <- rename(data_sum, c("mean" = varname))
+ return(data_sum)
+}
+
+df2 <- data_summary(EarlyLPP.data, varname="Avg..amplitude", 
+                    groupnames=c("Social.condition", "Emotional.condition"))
+# Convert dose to a factor variable
+df2$Social.condition=as.factor(df2$Social.condition)
+head(df2)
+
+# Default line plot
+p<- ggplot(df2, aes(x=Social.condition, y=Avg..amplitude, group=Emotional.condition, color=Emotional.condition)) + 
+  geom_line() +
+  geom_point()+
+  geom_errorbar(aes(ymin=Avg..amplitude-sd, ymax=Avg..amplitude+sd), width=.2,
+                 position=position_dodge(0.05))
+
+# Finished line plot
+p+labs(title="Interaction between socical and emotional conditions - EarlyLPP", x="Social Condition", y = "Avg. amplitude")
 
 ```
+##############################
+EARLY LPP
+##############################
+
+```{r}
+#Data for interaction of early LPP
+
+H.231 <- EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition == '231' & EarlyLPP.data$Emotional.condition == 'Happy']
+N.231 <- EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition == '231' & EarlyLPP.data$Emotional.condition == 'Neutral']
+A.231 <- EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition == '231' & EarlyLPP.data$Emotional.condition == 'Angry']
+H.224 <- EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition == '224' & EarlyLPP.data$Emotional.condition == 'Happy']
+N.224 <- EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition == '224' & EarlyLPP.data$Emotional.condition == 'Neutral']
+A.224 <- EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition == '224' & EarlyLPP.data$Emotional.condition == 'Angry']
+H.225 <- EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition == '225' & EarlyLPP.data$Emotional.condition == 'Happy']
+N.225 <- EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition == '225' & EarlyLPP.data$Emotional.condition == 'Neutral']
+A.225 <- EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition == '225' & EarlyLPP.data$Emotional.condition == 'Angry']
+
+H.231<-H.231[!is.na(H.231)]
+N.231<-N.231[!is.na(N.231)]
+A.231<-A.231[!is.na(A.231)]
+H.224<-H.224[!is.na(H.224)]
+N.224<-N.224[!is.na(N.224)]
+A.224<-A.224[!is.na(A.224)]
+H.225<-H.225[!is.na(H.225)]
+N.224<-N.225[!is.na(N.225)]
+A.225<-A.225[!is.na(A.225)]
+
+
+avg.231.H <- mean(H.231)
+avg.231.N <- mean(N.231)
+avg.231.A <- mean(A.231)
+avg.224.H <- mean(H.224)
+avg.224.N <- mean(N.224)
+avg.224.A <- mean(A.224)
+avg.225.H <- mean(H.225)
+avg.225.N <- mean(N.225)
+avg.225.A <- mean(A.225)
+
+#se.231.H <- sd(H.231)/length(H.231)
+#se.231.N <- sd(N.231)/length(N.231)
+#se.231.A <- sd(A.231)/length(A.231)
+
+se.231.H <- sd(H.231)/12
+se.231.N <- sd(N.231)/12
+se.231.A <- sd(A.231)/12
+se.224.H <- sd(H.224)/12
+se.224.N <- sd(N.224)/12
+se.224.A <- sd(A.224)/12
+se.225.H <- sd(H.225)/12
+se.225.N <- sd(N.225)/12
+se.225.A <- sd(A.225)/12
+
+#se1.231.H <- sd(avg.231.H)/12
+
+
+
+#(sd(avg.224.H))
+#(avg.231.H)
+
+min(H.231)
+max(H.231)
+(avg.231.H)
+
+```
+
+SE = std/sqrt(N), where N is the sample size
+
+```{r}
+## load package
+library(ggplot2)
+library(ggsignif) 
+ 
+## create summary data from Edgar Anderson's Iris data
+
+Social <- c("u 1", "u 2", "u 3", "swf 1", "swf 2", "swf 3", "swof 1", "swof 2", "swof 3")
+
+Emotion <- c("Happy", "Neutral", "Angry","Happy", "Neutral", "Angry","Happy", "Neutral", "Angry") 
+Avg <- c(avg.231.H, avg.231.N, avg.231.A, avg.224.H, avg.224.N, avg.224.A, avg.225.H, avg.225.N, avg.225.A)
+SE <- c(se.231.H, se.231.N, se.231.A, se.224.H, se.224.N, se.224.A, se.225.H, se.225.N, se.225.A)
+data <- data.frame(Social, Avg, SE)
+(data)
+ 
+## plot
+ggplot(data, aes(x = Social, y = Avg, fill = Emotion)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = Avg - SE, ymax = Avg + SE), width = .18) +
+  geom_signif(comparisons = list(c(7, 8)), annotations="***", y_position = 2.4, tip_length = 0.03) +
+  geom_signif(comparisons = list(c(8, 9)), annotations="***", y_position = 2.6, tip_length = 0.03) +
+  geom_signif(comparisons = list(c(3, 6)), annotations="***", y_position = 2.8, tip_length = 0.03) +
+  geom_signif(comparisons = list(c(6, 9)), annotations="***", y_position = 2.8, tip_length = 0.03) +
+  ggtitle("Interaction of early LPP") + labs(y = "Avg. amplitude") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+```{r}
+
+C.231 <- EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition == '231']
+C.224 <- EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition == '224']
+C.225 <- EarlyLPP.data$Avg..amplitude[EarlyLPP.data$Social.condition == '225']
+
+C.231<-C.231[!is.na(C.231)]
+C.224<-C.224[!is.na(C.224)]
+C.225<-C.225[!is.na(C.225)]
+
+avg.231.C <- mean(C.231)
+avg.224.C <- mean(C.224)
+avg.225.C <- mean(C.225)
+
+se.231.C <- sd(C.231)/12
+se.224.C <- sd(C.224)/12
+se.225.C <- sd(C.225)/12
+
+Social <- c("Unshared", "Shared with feedback", "Shared without feedback")
+
+Emotion <- c("u 1", "swf 1", "swof 1") 
+Avg <- c(avg.231.C, avg.224.C, avg.225.C)
+SE <- c(se.231.C, se.224.C, se.225.C)
+data <- data.frame(Social, Avg, SE)
+(data)
+ 
+## plot
+ggplot(data, aes(x = Social, y = Avg, fill = Emotion)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = Avg - SE, ymax = Avg + SE), width = .18) +
+  geom_signif(comparisons = list(c(1, 2)), annotations="***", y_position = 2.4, tip_length = 0.03) +
+  geom_signif(comparisons = list(c(1, 3)), annotations="***", y_position = 2.6, tip_length = 0.03) +
+  ggtitle("Main effect of early LPP") + labs(y = "Avg. amplitude") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+## load package
+library(ggplot2)
+library(ggsignif) 
+ 
+## create summary data from Edgar Anderson's Iris data
+Group <- c("A", "B", "C")
+DvValue <- c(0.246, 1.326, 2.026)
+SE <- c(0.029, 0.029, 0.029)
+data <- data.frame(Group, DvValue, SE)
+ 
+## plot
+ggplot(data, aes(x = Group, y = DvValue, fill = Group)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = DvValue - SE, ymax = DvValue + SE), width = .2) +
+  geom_signif(comparisons = list(c("A", "B")), annotations="***", y_position = 2.2, tip_length = 0.03) +
+  geom_signif(comparisons = list(c("A", "C")), annotations="***", y_position = 2.6, tip_length = 0.03) +
+  geom_signif(comparisons = list(c("B", "C")), annotations="***", y_position = 2.4, tip_length = 0.03) +
+  ggtitle("Sample") + labs(y = "DV") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+
+
 
 
 

@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 #path="C:\\Users\\kathr\\OneDrive\\Documents\\EEG Specialkursus"
-path="C:\\Users\\kathr\\OneDrive\\Documents\\EEG Specialkursus"
+path = "C:\\Users\\kathr\\OneDrive\\Documents\\GitHub\\EEG---Special-course"
 os.chdir(path)
 
 ######################
@@ -19,11 +19,11 @@ os.chdir(path)
 ######################
 
 mne.set_log_level("WARNING")
-raw1 = mne.io.read_raw_bdf("sj0016a_unshared.bdf", preload=True)
-raw2 = mne.io.read_raw_bdf("sj0016ab_shared.bdf", preload=True)
-raw3 = mne.io.read_raw_bdf("sj0016b_unshared.bdf", preload=True)
+raw1 = mne.io.read_raw_bdf("sj0013a_unshared.bdf", preload=True)
+raw2 = mne.io.read_raw_bdf("sj0013ab_shared.bdf", preload=True)
+raw3 = mne.io.read_raw_bdf("sj0013b_unshared.bdf", preload=True)
 
-#raw1.plot(n_channels=6, scalings={"eeg": 600e-7}, start=100, block = True)
+#raw1.plot(n_channels=6, scalings={"eeg": 1000e-7}, start=566, duration = 0.5, block = True)
 
 rawa = mne.concatenate_raws([raw1,raw2])
 rawb = mne.concatenate_raws([raw2,raw3])
@@ -37,10 +37,10 @@ print(rawa.info)
 
 f_rawa = rawa.filter(l_freq=0.1, h_freq=40, picks="eeg") 
 f_rawb = rawb.filter(l_freq=0.1, h_freq=40, picks="eeg")
-#f_rawa.plot(n_channels=32, scalings={"eeg": 600e-8}, start=100, block = True)
+#f_rawa.plot(n_channels=6, scalings={"eeg": 1000e-7}, start=566, duration = 0.5, block = True)
 #f_rawa.plot(n_channels=32, scalings={"eeg": 600e-8}, start=100, block = True)
 
-mne.viz.plot_raw(f_rawa, n_channels = 100)
+#mne.viz.plot_raw(f_rawa, n_channels = 100)
 
 
 print(rawa.info.ch_names)
@@ -372,7 +372,7 @@ df_233 = epochs_233_resampled['Angry1','Angry2'].to_data_frame(picks = new_ch_na
 ch_stat_231 = df_231.describe()
 ch_stat_233 = df_233.describe()
 
-epochs_233_resampled.plot()
+#epochs_233_resampled.plot()
 
 ###########################################
 #%% Dropping bad channels & interpolating #
@@ -396,22 +396,31 @@ print(epochs_231_resampled.info['bads'])
 
 #print(epochs_224a_resampled.info['dig'])
 
+epochs_231_resampled.plot(n_channels = 6, n_epochs = 5)
+
 epochs_a_resampled.set_eeg_reference('average')
-epochs_231_resampled.set_eeg_reference('average')
+epochs_reref = epochs_231_resampled.set_eeg_reference('average')
 epochs_224a_resampled.set_eeg_reference('average')
 epochs_225a_resampled.set_eeg_reference('average')
 
+epochs_reref.plot(n_channels = 6, n_epochs = 5)
+
+
+
+
+
+
 #Creating average plot
 
-print(new_ch_names)
+#print(new_ch_names)
 
-epochs_231_resampled.set_channel_types({'Fp1':'eeg'})
-evoked_231_Angry = epochs_231_resampled['Angry1','Angry2'].average(picks = new_ch_names)
-evoked_231_Happy = epochs_231_resampled['Happy1','Happy2'].average(picks = new_ch_names)
-evoked_231_Neutral = epochs_231_resampled['Neutral1','Neutral2'].average(picks = new_ch_names)
-evoked_231_Angry.plot()
-evoked_231_Happy.plot()
-evoked_231_Neutral.plot()
+#epochs_231_resampled.set_channel_types({'Fp1':'eeg'})
+#evoked_231_Angry = epochs_231_resampled['Angry1','Angry2'].average(picks = new_ch_names)
+#evoked_231_Happy = epochs_231_resampled['Happy1','Happy2'].average(picks = new_ch_names)
+#evoked_231_Neutral = epochs_231_resampled['Neutral1','Neutral2'].average(picks = new_ch_names)
+#evoked_231_Angry.plot()
+#evoked_231_Happy.plot()
+#evoked_231_Neutral.plot()
 
 # Testing things
 

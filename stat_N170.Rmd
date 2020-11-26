@@ -1,0 +1,61 @@
+
+FACTORIAL TWO WAY REPEATED MEASURES ANOVA
+
+```{r}
+library(lme4)
+library(nlme)
+
+N170.data <- read.csv("N170data.csv", header = TRUE)
+N170.data$Social.condition <- as.factor(N170.data$Social.condition)
+N170.data <- N170.data[complete.cases(N170.data), ]
+N170.data
+
+
+model <- lme(Avg..amplitude ~ Social.condition * Emotional.condition, random=~1|Subject, data = N170.data)
+anova(model)
+
+#library(car)
+#model1 <- lmer(Avg..amplitude ~ Social.condition + Emotional.condition + Social.condition:Emotional.condition+(1|Subject), data = N170.data)
+#Anova(model1, type = 'II')
+
+```
+
+From the p-values and F-values it can be interpreted that there is a main effect of the social and emotional condition
+
+POST HOC TEST FOR MAIN EFFECTS OF EMOTIONAL AND SOCIAL CONDITION
+
+```{r}
+library(emmeans)
+
+emm <- emmeans(model1, pairwise ~ Social.condition)
+print(emm)
+emm1<- emmeans(model1, pairwise ~ Emotional.condition)
+print(emm1)
+
+#pairs(emm, simple = "each")$emmeans
+
+```
+Significant difference between (224, 225) and (224, 231)
+
+Top doen effect of feedback from other person
+the top down effect enhances structural (encoding)
+Top down effect of shared attention on structural processing of faces (N170)
+
+N170 more attention
+LPP more arousal
+Hypothesize we expect the social context
+does feedback have a further top down effect.
+
+Significant difference between (Angry and Happy)
+
+We would have expected differences between all three
+
+224 = Shared with feedback, 225 = Shared without feedback, 231 = Unshared
+
+
+
+
+
+
+
+

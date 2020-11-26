@@ -1,0 +1,84 @@
+########################
+Bar plots late LPP
+########################
+```{r}
+
+LateLPP.data <- read.csv("LateLPPdata.csv", header = TRUE)
+
+
+```
+
+
+```{r}
+C.231 <- LateLPP.data$Avg..amplitude[LateLPP.data$Social.condition == '231']
+C.224 <- LateLPP.data$Avg..amplitude[LateLPP.data$Social.condition == '224']
+C.225 <- LateLPP.data$Avg..amplitude[LateLPP.data$Social.condition == '225']
+
+C.231<-C.231[!is.na(C.231)]
+C.224<-C.224[!is.na(C.224)]
+C.225<-C.225[!is.na(C.225)]
+
+avg.231.C <- mean(C.231)
+avg.224.C <- mean(C.224)
+avg.225.C <- mean(C.225)
+
+se.231.C <- sd(C.231)/12
+se.224.C <- sd(C.224)/12
+se.225.C <- sd(C.225)/12
+
+Social <- c("Unshared", "Shared with feedback", "Shared without feedback")
+
+Emotion <- c("Unshared", "Shared with feedback", "Shared without feedback") 
+Avg <- c(avg.231.C, avg.224.C, avg.225.C)
+SE <- c(se.231.C, se.224.C, se.225.C)
+data <- data.frame(Social, Avg, SE)
+(data)
+ 
+## plot
+ggplot(data, aes(x = Social, y = Avg, fill = Emotion)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = Avg - SE, ymax = Avg + SE), width = .18) +
+  geom_signif(comparisons = list(c(1, 2)), annotations="***", y_position = 2.4, tip_length = 0.03) +
+  geom_signif(comparisons = list(c(1, 3)), annotations="***", y_position = 2.6, tip_length = 0.03) +
+  ggtitle("Main effect of social context - Late LPP") + labs(y = "Avg. amplitude") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+```{r}
+
+C.H <- LateLPP.data$Avg..amplitude[LateLPP.data$Emotional.condition == 'Happy']
+C.N <- LateLPP.data$Avg..amplitude[LateLPP.data$Emotional.condition == 'Neutral']
+C.A <- LateLPP.data$Avg..amplitude[LateLPP.data$Emotional.condition == 'Angry']
+
+C.H<-C.H[!is.na(C.H)]
+C.N<-C.N[!is.na(C.N)]
+C.A<-C.A[!is.na(C.A)]
+
+avg.H.C <- mean(C.H)
+avg.N.C <- mean(C.N)
+avg.A.C <- mean(C.A)
+
+se.H.C <- sd(C.H)/12
+se.N.C <- sd(C.N)/12
+se.A.C <- sd(C.A)/12
+
+Social <- c("Happy", "Neutral", "Angry")
+
+Emotion <- c("Happy", "Neutral", "Angry") 
+Avg <- c(avg.H.C, avg.N.C, avg.A.C)
+SE <- c(se.H.C, se.N.C, se.A.C)
+data <- data.frame(Social, Avg, SE)
+(data)
+ 
+## plot
+ggplot(data, aes(x = Social, y = Avg, fill = Emotion)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = Avg - SE, ymax = Avg + SE), width = .18) +
+  geom_signif(comparisons = list(c(2, 3)), annotations="***", y_position = 2.4, tip_length = 0.03) +
+  #geom_signif(comparisons = list(c(1, 3)), annotations="***", y_position = 2.6, tip_length = 0.03) +
+  ggtitle("Main effect of emotional context - Late LPP") + labs(y = "Avg. amplitude") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+

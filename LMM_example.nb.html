@@ -1828,9 +1828,73 @@ F-statistic: 33.64 on 1 and 4 DF,  p-value: 0.004395</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<div id="mixed-model-part" class="section level3">
+<h3>MIXED MODEL PART</h3>
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShsbWU0KVxuYGBgIn0= -->
+<pre class="r"><code>library(lme4)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoicGFja2FnZSCRbG1lNJIgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiA0LjAuM0xvYWRpbmcgcmVxdWlyZWQgcGFja2FnZTogTWF0cml4XG4ifQ== -->
+<pre><code>package 㤼㸱lme4㤼㸲 was built under R version 4.0.3Loading required package: Matrix</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucG9saXRlbmVzcz1yZWFkLmNzdigncG9saXRlbmVzc19kYXRhLmNzdicpXG5oZWFkKHBvbGl0ZW5lc3MpXG5gYGAifQ== -->
+<pre class="r"><code>politeness=read.csv(&#39;politeness_data.csv&#39;)
+head(politeness)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NiwibmNvbCI6NX0sInJkZiI6Ikg0c0lBQUFBQUFBQUJwMVNTMDdETUJDZE9rMUtJclVnY1k1R2FpcFdiQ0tCdWthc3VuVWRwN2dFTzNVY0FSSUxqc0FXYnNCZFlNRkZPRUxCVG15VVpsZEdHbm5lZUQ1dnhyNitYTTZqWlFRQUhnd0JnZWRyRTRLTHExbHlsZ0FNa1VZRGZST2E4MEZIbldyRHhKeVlNSHVCRnJOL1dQczFCb3ZERElCeGsyM290WXFzZWxhNzFiMVNGTTVrUEQvSUN6QXhsZExOKzZ1V3Q1UzltQlZCdXYxcWNYaytONUt5cHc4dG4rbjJPemZTVzU3UDhSMnRMQzNmT2tkVnZkcFFvaXdNMXBSblZGcDBWQkhLc1dUQ1lhd1VVM1ZHTFE1elNiYzE1ZVN4MXlxVTRqNTI3Y3lXMEhQRDJHeHJueE1wY09VNE9XZVVZWVhqWE9wOGpYYTlsSkVvRlJOY0o2SHVUL2o3SXJMbk9LNjVZWkpOeVUzTmI2ZUphZEI1czdFOWc0N3R0eTNSVDI5WkFlVnJ4dDMwZm9GWDFMM1RSRS9jREJ5WGtuRzN6a2g3cTFnSmhWMWNSRVRoUE0xc3NQc0ZSd1I5VlFFREFBQT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["subject"],"name":[1],"type":["chr"],"align":["left"]},{"label":["gender"],"name":[2],"type":["chr"],"align":["left"]},{"label":["scenario"],"name":[3],"type":["int"],"align":["right"]},{"label":["attitude"],"name":[4],"type":["chr"],"align":["left"]},{"label":["frequency"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"F1","2":"F","3":"1","4":"pol","5":"213.3","_rn_":"1"},{"1":"F1","2":"F","3":"1","4":"inf","5":"204.5","_rn_":"2"},{"1":"F1","2":"F","3":"2","4":"pol","5":"285.1","_rn_":"3"},{"1":"F1","2":"F","3":"2","4":"inf","5":"259.7","_rn_":"4"},{"1":"F1","2":"F","3":"3","4":"pol","5":"203.9","_rn_":"5"},{"1":"F1","2":"F","3":"3","4":"inf","5":"286.9","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10],"total":[5]},"rows":{"min":[10],"max":[10],"total":[6]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTkFcbmBgYCJ9 -->
+<pre class="r"><code>NA</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucG9saXRlbmVzcy5tb2RlbCA9IGxtZXIoZnJlcXVlbmN5IH4gYXR0aXR1ZGUgK2dlbmRlciArICgxfHN1YmplY3QpICsoMXxzY2VuYXJpbyksIGRhdGE9cG9saXRlbmVzcylcbnN1bW1hcnkocG9saXRlbmVzcy5tb2RlbClcbmBgYCJ9 -->
+<pre class="r"><code>politeness.model = lmer(frequency ~ attitude +gender + (1|subject) +(1|scenario), data=politeness)
+summary(politeness.model)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBSRU1MIFsnbG1lck1vZCddXG5Gb3JtdWxhOiBmcmVxdWVuY3kgfiBhdHRpdHVkZSArIGdlbmRlciArICgxIHwgc3ViamVjdCkgKyAoMSB8IHNjZW5hcmlvKVxuICAgRGF0YTogcG9saXRlbmVzc1xuXG5SRU1MIGNyaXRlcmlvbiBhdCBjb252ZXJnZW5jZTogNzc1LjVcblxuU2NhbGVkIHJlc2lkdWFsczogXG4gICAgTWluICAgICAgMVEgIE1lZGlhbiAgICAgIDNRICAgICBNYXggXG4tMi4yNTkxIC0wLjYyMzYgLTAuMDc3MiAgMC41Mzg4ICAzLjQ3OTUgXG5cblJhbmRvbSBlZmZlY3RzOlxuIEdyb3VwcyAgIE5hbWUgICAgICAgIFZhcmlhbmNlIFN0ZC5EZXYuXG4gc2NlbmFyaW8gKEludGVyY2VwdCkgMjE5LjUgICAgMTQuODEgICBcbiBzdWJqZWN0ICAoSW50ZXJjZXB0KSA2MTUuNiAgICAyNC44MSAgIFxuIFJlc2lkdWFsICAgICAgICAgICAgIDY0NS45ICAgIDI1LjQxICAgXG5OdW1iZXIgb2Ygb2JzOiA4MywgZ3JvdXBzOiAgc2NlbmFyaW8sIDc7IHN1YmplY3QsIDZcblxuRml4ZWQgZWZmZWN0czpcbiAgICAgICAgICAgIEVzdGltYXRlIFN0ZC4gRXJyb3IgdCB2YWx1ZVxuKEludGVyY2VwdCkgIDI1Ni44NDYgICAgIDE2LjExNiAgMTUuOTM4XG5hdHRpdHVkZXBvbCAgLTE5LjcyMSAgICAgIDUuNTg0ICAtMy41MzJcbmdlbmRlck0gICAgIC0xMDguNTE2ICAgICAyMS4wMTMgIC01LjE2NFxuXG5Db3JyZWxhdGlvbiBvZiBGaXhlZCBFZmZlY3RzOlxuICAgICAgICAgICAgKEludHIpIGF0dHRkcFxuYXR0aXR1ZGVwb2wgLTAuMTczICAgICAgIFxuZ2VuZGVyTSAgICAgLTAuNjUyICAwLjAwNFxuIn0= -->
+<pre><code>Linear mixed model fit by REML [&#39;lmerMod&#39;]
+Formula: frequency ~ attitude + gender + (1 | subject) + (1 | scenario)
+   Data: politeness
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQoNCg0KDQpgYGB7cn0NCnBpdGNoPWMoMjMzLDIwNCwyNDIsMTMwLDExMiwxNDIpDQpzZXg9YyhyZXAoImZlbWFsZSIsMykscmVwKCJtYWxlIiwzKSkNCm15LmRmPWRhdGEuZnJhbWUoc2V4LHBpdGNoKQ0KDQpgYGANCg0KDQpgYGB7cn0NCnhtZGw9bG0ocGl0Y2h+c2V4LG15LmRmKQ0Kc3VtbWFyeSh4bWRsKQ0KYGBgDQoNCmBgYHtyfQ0KbWVhbihteS5kZltteS5kZiRzZXg9PSJmZW1hbGUiLF0kcGl0Y2gpDQpgYGANCg0KYGBge3J9DQphZ2U9YygxNCwyMywzNSw0OCw1Miw2NykNCnBpdGNoPWMoMjUyLDI0NCwyNDAsMjMzLDIxMiwyMDQpDQpteS5kZj1kYXRhLmZyYW1lKGFnZSxwaXRjaCkNCnhtZGw9bG0ocGl0Y2h+YWdlLG15LmRmKQ0Kc3VtbWFyeSh4bWRsKQ0KYGBgDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0K</div>
+REML criterion at convergence: 775.5
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-2.2591 -0.6236 -0.0772  0.5388  3.4795 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ scenario (Intercept) 219.5    14.81   
+ subject  (Intercept) 615.6    24.81   
+ Residual             645.9    25.41   
+Number of obs: 83, groups:  scenario, 7; subject, 6
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)  256.846     16.116  15.938
+attitudepol  -19.721      5.584  -3.532
+genderM     -108.516     21.013  -5.164
+
+Correlation of Fixed Effects:
+            (Intr) atttdp
+attitudepol -0.173       
+genderM     -0.652  0.004</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQoNCg0KDQpgYGB7cn0NCnBpdGNoPWMoMjMzLDIwNCwyNDIsMTMwLDExMiwxNDIpDQpzZXg9YyhyZXAoImZlbWFsZSIsMykscmVwKCJtYWxlIiwzKSkNCm15LmRmPWRhdGEuZnJhbWUoc2V4LHBpdGNoKQ0KDQpgYGANCg0KDQpgYGB7cn0NCnhtZGw9bG0ocGl0Y2h+c2V4LG15LmRmKQ0Kc3VtbWFyeSh4bWRsKQ0KYGBgDQoNCmBgYHtyfQ0KbWVhbihteS5kZltteS5kZiRzZXg9PSJmZW1hbGUiLF0kcGl0Y2gpDQpgYGANCg0KYGBge3J9DQphZ2U9YygxNCwyMywzNSw0OCw1Miw2NykNCnBpdGNoPWMoMjUyLDI0NCwyNDAsMjMzLDIxMiwyMDQpDQpteS5kZj1kYXRhLmZyYW1lKGFnZSxwaXRjaCkNCnhtZGw9bG0ocGl0Y2h+YWdlLG15LmRmKQ0Kc3VtbWFyeSh4bWRsKQ0KYGBgDQoNCiMjIyBNSVhFRCBNT0RFTCBQQVJUICMjIw0KYGBge3J9DQpsaWJyYXJ5KGxtZTQpDQpwb2xpdGVuZXNzPXJlYWQuY3N2KCdwb2xpdGVuZXNzX2RhdGEuY3N2JykNCmhlYWQocG9saXRlbmVzcykNCg0KYGBgDQoNCmBgYHtyfQ0KcG9saXRlbmVzcy5tb2RlbCA9IGxtZXIoZnJlcXVlbmN5IH4gYXR0aXR1ZGUgK2dlbmRlciArICgxfHN1YmplY3QpICsoMXxzY2VuYXJpbyksIGRhdGE9cG9saXRlbmVzcykNCnN1bW1hcnkocG9saXRlbmVzcy5tb2RlbCkNCg0KYGBgDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0K</div>
 
 
 

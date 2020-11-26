@@ -1,0 +1,70 @@
+
+FACTORIAL TWO WAY REPEATED MEASURES ANOVA
+
+```{r}
+library(lme4)
+library(nlme)
+
+EarlyLPP.data <- read.csv("EarlyLPPdata.csv", header = TRUE)
+EarlyLPP.data$Social.condition <- as.factor(EarlyLPP.data$Social.condition)
+EarlyLPP.data <- EarlyLPP.data[complete.cases(EarlyLPP.data), ]
+EarlyLPP.data
+
+
+model <- lme(Avg..amplitude ~ Social.condition * Emotional.condition, random=~1|Subject, data = EarlyLPP.data)
+anova(model)
+
+library(car)
+model1 <- lmer(Avg..amplitude ~ Social.condition + Emotional.condition + Social.condition:Emotional.condition+(1|Subject), data = EarlyLPP.data)
+Anova(model1, type = 'II')
+
+```
+Main effect of social condition
+```{r}
+library(emmeans)
+
+emm <- emmeans(model1, pairwise ~ Social.condition)
+print(emm)
+
+
+```
+
+Main effect of emotion
+```{r}
+emm1<- emmeans(model1, pairwise ~ Emotional.condition)
+print(emm1)
+
+
+
+```
+
+Main effect of social
+```{r}
+emm2<- emmeans(model1, pairwise ~ Social.condition*Emotional.condition)
+pairs(emm2, simple = "each")$emmeans
+```
+
+
+
+ of Significant difference between (224, 225) and (224, 231)
+ 
+ 
+ Top down effect carries over to later stages of processing
+ Shared with feedback enhances arousal towards emotional 
+ 
+ 
+Significant difference between (Neutral and Happy)
+
+
+replicates previous literature
+
+
+Within angry there is a difference between all social levels
+Within social condition 231 (unshared) there is a significant difference between (Angry,Neutral) and (Happy,Neutral)
+
+224 = Shared with feedback, 225 = Shared without feedback, 231 = Unshared
+
+
+Especially effect on the angry condition where a social condition has an effect. It does not seem to have an effect on
+
+

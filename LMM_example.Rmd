@@ -31,8 +31,19 @@ xmdl=lm(pitch~age,my.df)
 summary(xmdl)
 ```
 
+### MIXED MODEL PART ###
+```{r}
+library(lme4)
+politeness=read.csv('politeness_data.csv')
+head(politeness)
 
+```
 
+```{r}
+politeness.model = lmer(frequency ~ attitude +gender + (1|subject) +(1|scenario), data=politeness)
+summary(politeness.model)
+
+```
 
 
 

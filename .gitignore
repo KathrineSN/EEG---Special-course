@@ -247,3 +247,22 @@ sj0018b_unshared.bdf
 sj0019a_unshared.bdf
 sj0019ab_shared.bdf
 sj0019b_unshared.bdf
+after_filter.PNG
+After_Filter2.PNG
+After_Reref.PNG
+before_filter.PNG
+Before_Filter2.PNG
+Before_Reref.PNG
+*.fif
+*.fif
+epochs_224a_resampled-epo.fif
+epochs_224b_resampled-epo.fif
+epochs_225a_resampled-epo.fif
+epochs_225b_resampled-epo.fif
+epochs_233_resampled-epo.fif
+epochs_224a_resampled-epo.fif
+*.PNG
+*.fif
+epochs_224a_resampled-epo.fif
+politeness_data.csv
+Week 12.pdf

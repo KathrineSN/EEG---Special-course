@@ -1,0 +1,31 @@
+
+FACTORIAL TWO WAY REPEATED MEASURES ANOVA
+
+```{r}
+library(lme4)
+library(nlme)
+
+EPN.data <- read.csv("EPNdata.csv", header = TRUE)
+EPN.data$Social.condition <- as.factor(EPN.data$Social.condition)
+EPN.data <- EPN.data[complete.cases(EPN.data), ]
+EPN.data
+
+
+model <- lme(Avg..amplitude ~ Social.condition * Emotional.condition, random=~1|Subject, data = EPN.data)
+anova(model)
+
+library(car)
+model1 <- lmer(Avg..amplitude ~ Social.condition + Emotional.condition + Social.condition:Emotional.condition+(1|Subject), data = EPN.data)
+Anova(model1, type = 'II')
+
+```
+
+No main effects or interactions.
+
+
+
+
+
+
+
+

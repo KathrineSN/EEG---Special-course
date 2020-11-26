@@ -1,0 +1,49 @@
+
+FACTORIAL TWO WAY REPEATED MEASURES ANOVA
+
+
+```{r}
+library(lme4)
+library(nlme)
+
+LateLPP.data <- read.csv("LateLPPdata.csv", header = TRUE)
+LateLPP.data$Social.condition <- as.factor(LateLPP.data$Social.condition)
+LateLPP.data <- LateLPP.data[complete.cases(LateLPP.data), ]
+LateLPP.data
+
+
+model <- lme(Avg..amplitude ~ Social.condition * Emotional.condition, random=~1|Subject, data = LateLPP.data)
+anova(model)
+
+library(car)
+model1 <- lmer(Avg..amplitude ~ Social.condition + Emotional.condition + Social.condition:Emotional.condition+(1|Subject), data = LateLPP.data)
+Anova(model1, type = 'II')
+
+```
+From the p-values and F-values it can be interpreted that there is a main effect of the social and emotional condition
+
+POST HOC TEST FOR MAIN EFFECTS OF EMOTIONAL AND SOCIAL CONDITION
+
+Main effect of social condition
+```{r}
+library(emmeans)
+
+emm <- emmeans(model1, pairwise ~ Social.condition)
+print(emm)
+
+
+```
+
+Main effect of emotion
+```{r}
+emm1<- emmeans(model1, pairwise ~ Emotional.condition)
+print(emm1)
+```
+
+Significant difference between (224, 225) and (224, 231)
+Significant difference between (Happy and Neutral)
+224 = Shared with feedback, 225 = Shared without feedback, 231 = Unshared
+
+
+
+

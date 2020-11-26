@@ -29,8 +29,8 @@ def loading_raw(file1, file2, file3, pair):
         raw1.drop_channels(['3-A1', '3-A2', '3-A3', '3-A4', '3-A5', '3-A6', '3-A7', '3-A8', '3-A9', '3-A10', '3-A11', '3-A12','3-A13', '3-A14', '3-A15', '3-A16', '3-A17', '3-A18', '3-A19', '3-A20', '3-A21', '3-A22', '3-A23', '3-A24', '3-A25', '3-A26', '3-A27', '3-A28', '3-A29', '3-A30', '3-A31', '3-A32', '3-B1', '3-B2', '3-B3', '3-B4', '3-B5', '3-B6', '3-B7', '3-B8', '3-B9', '3-B10', '3-B11', '3-B12', '3-B13', '3-B14', '3-B15', '3-B16', '3-B17', '3-B18', '3-B19', '3-B20', '3-B21', '3-B22', '3-B23', '3-B24', '3-B25', '3-B26', '3-B27', '3-B28', '3-B29', '3-B30', '3-B31', '3-B32', '3-EXG1', '3-EXG2', '3-EXG3', '3-EXG4', '3-EXG5', '3-EXG6', '3-EXG7', '3-EXG8', '4-A1', '4-A2', '4-A3', '4-A4', '4-A5', '4-A6', '4-A7', '4-A8', '4-A9', '4-A10', '4-A11', '4-A12', '4-A13', '4-A14', '4-A15', '4-A16', '4-A17', '4-A18', '4-A19', '4-A20', '4-A21', '4-A22', '4-A23', '4-A24','4-A25', '4-A26', '4-A27','4-A28','4-A29', '4-A30', '4-A31','4-A32', '4-B1','4-B2', '4-B3','4-B4', '4-B5', '4-B6','4-B7','4-B8','4-B9','4-B10','4-B11','4-B12','4-B13','4-B14', '4-B15', '4-B16','4-B17','4-B18','4-B19','4-B20','4-B21','4-B22','4-B23','4-B24','4-B25','4-B26','4-B27','4-B28','4-B29','4-B30','4-B31','4-B32', '4-EXG1','4-EXG2','4-EXG3','4-EXG4','4-EXG5','4-EXG6','4-EXG7', '4-EXG8'])  
     
      #raw1.plot(n_channels=6, scalings={"eeg": 600e-7}, start=100, block = True)
-    raw2.plot(n_channels=6, scalings={"eeg": 600e-7}, start=100, block = True)
-    raw2.plot(n_channels=6, scalings={"eeg": 600e-7}, start=100, block = True)
+    #raw2.plot(n_channels=6, scalings={"eeg": 700e-7}, duration = 1, start=0, block = True)
+    #raw2.plot(n_channels=6, scalings={"eeg": 700e-7}, start=100, block = True)
     
     rawa = mne.concatenate_raws([raw1,raw2])
     rawb = mne.concatenate_raws([raw2,raw3])
@@ -40,6 +40,9 @@ def loading_raw(file1, file2, file3, pair):
     
     f_rawa = rawa.filter(l_freq=0.1, h_freq=40, picks="eeg") 
     f_rawb = rawb.filter(l_freq=0.1, h_freq=40, picks="eeg")
+    
+    f_rawa.plot(n_channels=6, scalings={"eeg": 700e-7}, duration = 1, start=0, block = True)
+
     
     #diving channels
         
